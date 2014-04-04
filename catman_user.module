@@ -1,0 +1,297 @@
+<?php
+/**
+ * @file
+ * Code for the Commerce Kickstart User feature.
+ */
+
+include_once 'catman_user.features.inc';
+
+
+/**
+ * Implements hook_menu_alter().
+ */
+function catman_user_menu_alter(&$items) {
+  $items['user/%user']['title callback'] = '_catman_user_page_title';
+  $items['user/%user/connections']['access_callback'] = 'catman_user_access_callback';
+  $items['user/%user/view']['title'] = 'User account';
+  $items['user/%user/view']['title callback'] = '_catman_user_tab_title';
+  $items['user/%user/view']['title arguments'] = array(1);
+  $items['user/%user/edit']['title'] = 'Update email/password';
+  $items['user']['type'] = MENU_CALLBACK;
+  $items['user/register']['type'] = MENU_CALLBACK;
+  $items['user/password']['type'] = MENU_CALLBACK;
+}
+
+/**
+ * Implements hook_translated_menu_link_alter().
+ */
+function catman_user_translated_menu_link_alter(&$item, $map) {
+  // Hide the "User account" link for anonymous users.
+  if ($item['menu_name'] == 'menu-user-menu' && $item['link_path'] == 'user' && user_is_anonymous()) {
+    $item['hidden'] = 1;
+  }
+}
+
+/**
+ * Implements hook_views_pre_build().
+ */
+function catman_user_views_pre_build(&$view) {
+  if ($view->name == 'commerce_backoffice_order_user_orders' && $view->current_display == 'order_page') {
+    $view->display['order_page']->handler->options['title'] = _catman_user_page_title();
+  }
+}
+
+/**
+ * Helper function for user page title.
+ */
+function _catman_user_page_title($account = NULL) {
+  if (!is_object($account)) {
+    $account = $GLOBALS['user'];
+  }
+  return t('Hello, @user', array('@user' => format_username($account)));
+}
+
+/**
+ * Implements hook_username_alter().
+ */
+function catman_user_username_alter(&$name, $account) {
+  if (!empty($account->uid) && module_exists('commerce_addressbook')) {
+    if ($billing_profile_id = commerce_addressbook_get_default_profile_id($account->uid, 'billing')) {
+      $billing_profile = commerce_customer_profile_load($billing_profile_id);
+      if (!empty($billing_profile->commerce_customer_address[LANGUAGE_NONE][0]['name_line'])) {
+        $name = $billing_profile->commerce_customer_address[LANGUAGE_NONE][0]['name_line'];
+      }
+    }
+  }
+}
+
+/**
+ * Helper function for user menu tab title.
+ */
+function _catman_user_tab_title($account) {
+  return (is_object($account) && $GLOBALS['user']->uid == $account->uid) ? t('My account') : t('Account overview');
+}
+
+/**
+ * Grant access only to administrators.
+ */
+function catman_user_access_callback($account) {
+  return user_access('administer site configuration', $account);
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function catman_user_module_implements_alter(&$implementations, $hook) {
+  if (in_array($hook, array('form_alter')) && isset($implementations['catman_user'])) {
+    // Move our hook implementation to the bottom.
+    $group = $implementations['catman_user'];
+    unset($implementations['catman_user']);
+    $implementations['catman_user'] = $group;
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * Hide the Mime Mail settings on the user settings page.
+ */
+function catman_user_form_user_profile_form_alter(&$form, &$form_state) {
+  if ($form['#user_category'] == 'account') {
+    $form['mimemail']['#access'] = FALSE;
+    // don't display requested account type
+    $form['field_requested_account_type']['#access'] = FALSE;
+  }
+
+}
+
+
+/**
+ * Implements hook_form_alter().
+ */
+function catman_user_form_alter(&$form, &$form_state, $form_id) {
+
+  if ($form_id == 'user_login') {
+
+    $form['name']['#prefix']  = '<div id="' . $form_id . '_form">';
+    $form['name']['#prefix'] .= '<h1>' . t('Sign in') . '</h1>';
+    $form['pass']['#description'] = t('Enter your password.');
+    $form['pass']['#suffix'] = l(t('Forgot your password?'), 'user/password', array('attributes' => array('class' => array('login-password'), 'title' => t('Get a new password'))));
+    $form['actions']['#suffix']  = '</div>';
+    if (variable_get('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL) != USER_REGISTER_ADMINISTRATORS_ONLY) {
+      $form['actions']['#suffix'] .= '<div class="create-account clearfix">';
+      $form['actions']['#suffix'] .= "\r<h2>" . t('Don\'t have an account?') . "</h2>";
+      $form['actions']['#suffix'] .= "\r" . l(t('Create an account'), 'user/register', array('attributes' => array('class' => array('login-register'), 'title' => t('Create a new account'))));
+      $form['actions']['#suffix'] .= '</div>';
+      $form['actions']['submit']['#value'] = 'Sign in';
+    }
+  }
+
+  if ($form_id == 'user_pass') {
+    $form['name']['#prefix'] = '<div id="' . $form_id . '_form">';
+    $form['name']['#prefix'] .= '<h1>' . t('Request a new password') . '</h1>';
+    $form['actions']['#suffix'] = '<div class="back-to-login clearfix">' . l(t('Back to sign in'), 'user/login', array('attributes' => array('class' => array('login-account'), 'title' => t('Sign in')))) . '</div>';
+    $form['actions']['#suffix'] .= '</div>';
+    $form['name']['#description'] = t('We\'ll send a password reset message to your e-mail address.');
+  }
+
+  if ($form_id == 'user_register_form') {
+    $form['account']['name']['#prefix'] = '<div id="' . $form_id . '">';
+    $form['account']['name']['#prefix'] .= '<h1>' . t('Create account') . '</h1>';
+    $form['actions']['submit']['#suffix'] = '<div class="back-to-login clearfix">' . l(t('Back to sign in'), 'user/login', array('attributes' => array('class' => array('login-account'), 'title' => t('Sign in')))) . '</div>';
+    $form['actions']['submit']['#suffix'] .= '</div>';
+    $form['account']['mail']['#description'] = t('Enter a valid e-mail address. We will send all messages about your account (e.g., password reset emails) and your OSU Extension Catalog orders to this address. Your e-mail address will not be sold or made public. <br><br><em>Note for OSU faculty and staff:</em> If you wish to make purchases for use in your Extension, research, or teaching work, please create an account with your OSU e-mail address. If you wish to make personal purchases, please create an account with a personal e-mail address. You can have more than one account, but each account requires a unique e-mail address.');
+    $form['account']['pass']['#description'] = t('Enter your new password in both fields.');
+  }
+
+  if ($form_id == 'user_profile_form') {
+     $form['account']['mail']['#weight'] = '-10'; // make field appear at top of form
+     $form['account']['mail']['#description'] = t('Enter a valid e-mail address. We will send all messages about your account (e.g., password reset emails) and your OSU Extension Catalog orders to this address. Your e-mail address will not be sold or made public.');
+     $form['account']['current_pass']['#description'] = t('Enter your current password (required to change your e-mail address or password).<br>
+Forgot your password? <a href="/catalog/user/password" title="Request new password via e-mail.">Request new password</a>.');
+     $form['account']['pass']['#description'] = t('Enter your new password in both fields.');
+  }
+}
+
+
+/**
+ * Implements hook_user_view().
+ */
+function catman_user_user_view($account, $view_mode, $langcode) {
+
+  $account->content['information'] =  array(
+    '#type' => 'user_profile_category',
+    '#title' => t('Account information'),
+    '#markup' => '',
+    '#attributes' => array('class' => array('user-information', 'clearfix')),
+  );
+
+
+  if (module_exists('commerce_addressbook')) {
+    $shipping_profile_id = $billing_profile_id = NULL;
+    if (commerce_addressbook_profile_page_access($account, 'shipping')) {
+      $shipping_profile_id = commerce_addressbook_get_default_profile_id($account->uid, 'shipping');
+      if ($shipping_profile_id) {
+        $shipping_profile = commerce_customer_profile_load($shipping_profile_id);
+        $shipping_profile_render = entity_view('commerce_customer_profile', array($shipping_profile), 'full');
+        $shipping_profile_render = reset($shipping_profile_render);
+        $shipping_profile_output = drupal_render($shipping_profile_render);
+      }
+      else {
+        $shipping_profile_output = '<p>' . t('No default shipping profile') . '</p>';
+      }
+      $account->content['information']['shipping_profile'] =  array(
+        '#type' => 'user_profile_item',
+        '#title' => t('Primary shipping address'),
+        '#markup' => $shipping_profile_output . l(t('Manage shipping address'), 'user/' . $account->uid . '/addressbook/shipping'),
+        '#attributes' => array('class' => array('shipping-address')),
+      );
+    }
+    if (commerce_addressbook_profile_page_access($account, 'billing')) {
+      $billing_profile_id = commerce_addressbook_get_default_profile_id($account->uid, 'billing');
+      if ($billing_profile_id) {
+        $billing_profile = commerce_customer_profile_load($billing_profile_id);
+        $billing_profile_render = entity_view('commerce_customer_profile', array($billing_profile), 'full');
+        $billing_profile_render = reset($billing_profile_render);
+        $billing_profile_output = drupal_render($billing_profile_render);
+      }
+      else {
+        $billing_profile_output = '<p>' . t('No default billing profile') . '</p>';
+      }
+      $account->content['information']['billing_profile'] =  array(
+        '#type' => 'user_profile_item',
+        '#title' => t('Primary billing address'),
+        '#markup' => $billing_profile_output  . l(t('Manage billing address'), 'user/' . $account->uid . '/addressbook/billing'),
+        '#attributes' => array('class' => array('billing-address')),
+      );
+    }
+  }
+  $account->content['information']['mail'] = array(
+    '#type' => 'user_profile_item',
+    '#title' => t('Email address'),
+    '#markup' => '<p>' . $account->mail . '</p>' . l(t('Update email/password'), 'user/' . $account->uid . '/edit'),
+    '#attributes' => array('class' => array('mail')),
+  );
+
+  $account->content['recent_orders'] =  array(
+    '#type' => 'user_profile_category',
+    '#title' => t('Recent orders'),
+    '#markup' => '',
+    '#attributes' => array('class' => array('user-recent-orders', 'clearfix')),
+    '#access' => user_access('view own commerce_order entities', $account),
+  );
+
+  $account->content['recent_orders']['view'] = array(
+    '#type' => 'user_profile_item',
+    '#title' => '',
+    '#markup' => views_embed_view('commerce_backoffice_user_orders', 'block_1', $account->uid),
+    '#attributes' => array('class' => array('recent-orders')),
+  );
+
+}
+
+/**
+ * Implements hook_user_view_alter().
+ *
+ * Hide other infos.
+ */
+function catman_user_user_view_alter(&$build) {
+  if (isset($build['mimemail'])) {
+    unset($build['mimemail']);
+  }
+  if (isset($build['summary'])) {
+    unset($build['summary']);
+  }
+  if (isset($build['field_requested_account_type'])) {
+    unset($build['field_requested_account_type']);
+  }
+}
+
+
+/**
+ * Implements hook_preprocess_user_profile_item().
+ */
+function catman_user_preprocess_user_profile_item(&$variables) {
+  // Append custom css classes.
+  if (!empty($variables['element']['#attributes']['class'])) {
+    $variables['classes_array'] = array_merge($variables['classes_array'], $variables['element']['#attributes']['class']);
+  }
+}
+
+/**
+ * Implements hook_preprocess_user_profile_category().
+ */
+function catman_user_preprocess_user_profile_category(&$variables) {
+  // Append custom css classes.
+  if (!empty($variables['element']['#attributes']['class'])) {
+    $variables['classes_array'] = array_merge($variables['classes_array'], $variables['element']['#attributes']['class']);
+  }
+}
+
+/**
+ * Implements hook_theme_registry_alter().
+ */
+function catman_user_theme_registry_alter(&$theme_registry) {
+  $path = drupal_get_path('module', 'catman_user');
+
+  //Only alter the template if it is not already overridden in a theme
+  if (strpos($theme_registry['user_profile_category']['theme path'], "themes/") === FALSE) {
+    $theme_registry['user_profile_category']['template'] = $path . '/user-profile-category';
+  }
+  if (strpos($theme_registry['user_profile_item']['theme path'], "themes/") === FALSE) {
+    $theme_registry['user_profile_item']['template'] = $path . '/user-profile-item';
+  }
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function catman_user_preprocess_page(&$variables) {
+  switch (current_path()) {
+    case 'user':
+    case 'user/login':
+    case 'user/register':
+    case 'user/password':
+      $variables['title'] = '';
+  }
+}

@@ -1,4 +1,4 @@
-catman_user
+Catman User
 ===========
 
-USer related functionality
+Provides user related functionality. Cloned from Commerce Kickstart User
