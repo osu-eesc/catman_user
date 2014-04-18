@@ -13,37 +13,37 @@ function catman_user_user_default_roles() {
   // Exported role: Customer.
   $roles['Customer'] = array(
     'name' => 'Customer',
-    'weight' => 8,
+    'weight' => 2,
   );
 
   // Exported role: OSU affiliate.
   $roles['OSU affiliate'] = array(
     'name' => 'OSU affiliate',
-    'weight' => 5,
+    'weight' => 3,
   );
 
   // Exported role: PNW.
   $roles['PNW'] = array(
     'name' => 'PNW',
-    'weight' => 7,
+    'weight' => 5,
   );
 
   // Exported role: Project manager.
   $roles['Project manager'] = array(
     'name' => 'Project manager',
-    'weight' => 4,
+    'weight' => 7,
   );
 
   // Exported role: Reseller.
   $roles['Reseller'] = array(
     'name' => 'Reseller',
-    'weight' => 6,
+    'weight' => 4,
   );
 
   // Exported role: Store manager.
   $roles['Store manager'] = array(
     'name' => 'Store manager',
-    'weight' => 3,
+    'weight' => 6,
   );
 
   return $roles;

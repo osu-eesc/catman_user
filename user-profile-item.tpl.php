@@ -24,9 +24,6 @@
 
 ?>
 
-<?php
-
- ?>
 <li>
   <h4<?php print $attributes; ?>><?php print $title; ?></h4>
   <div<?php print $attributes; ?>><?php print $value; ?></div>

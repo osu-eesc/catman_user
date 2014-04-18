@@ -14,7 +14,7 @@ function catman_user_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'commerce_customer_profile_billing_addressbook';
-  $strongarm->value = TRUE;
+  $strongarm->value = 1;
   $export['commerce_customer_profile_billing_addressbook'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -71,7 +71,7 @@ function catman_user_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'htmlmail_test';
   $strongarm->value = array(
-    'to' => 'bmayjor@gmail.com',
+    'to' => 'mayjorb@onid.oregonstate.edu',
     'subject' => 'testing commerce mail filter - html mail system',
     'body' => array(
       'value' => '<p>Please find below the invoice related to your order [commerce-invoice:order:order-number] at [site:name].</p>
@@ -127,9 +127,9 @@ function catman_user_strongarm() {
   $strongarm->api_version = 1;
   $strongarm->name = 'mail_system';
   $strongarm->value = array(
-    'default-system' => 'DefaultMailSystem',
+    'default-system' => 'MimeMailSystem',
     'mimemail' => 'HTMLMailSystem',
-    'htmlmail' => 'HTMLMailSystem',
+    'htmlmail' => 'MimeMailSystem',
   );
   $export['mail_system'] = $strongarm;
 
@@ -151,23 +151,22 @@ function catman_user_strongarm() {
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_cancel_confirm_body';
-  $strongarm->value = 'We received a request to cancel your [site:name] account. NOTE: Cancellation of your account is not reversible.
+  $strongarm->value = '<p>We received a request to cancel your [site:name] account. NOTE: Cancellation of your account is not reversible.
 
-If you still want to cancel your account, click this link or copy and paste it into your browser:
-[user:cancel-url]
+<p>If you still want to cancel your account, click this link or copy and paste it into your browser:<br />
+<div>[user:cancel-url]</div></p>
 
-This link expires in one day, and nothing will happen if it is not used.
+<p>This link expires in one day, and nothing will happen if it is not used.</p>
 
-Please contact us if you have questions. Thank you.
+<p>Please contact us if you have questions. Thank you.</p>
 
-
-Extension and Experiment Station Communications
-Oregon State University
-422 Kerr Administration Bldg.
-Corvallis, OR 97331-2119
-Phone: 541-737-2513 or 800-561-6719
-Email: puborders@oregonstate.edu
-extension.oregonstate.edu/catalog';
+<br />
+<p><strong>Extension and Experiment Station Communications</strong><br />
+Oregon State University<br />
+422 Kerr Administration Bldg.<br />
+Corvallis, OR 97331-2119<br />
+Phone: 541-737-2513 or 800-561-6719<br />
+Email: puborders@oregonstate.edu</p>';
   $export['user_mail_cancel_confirm_body'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -181,21 +180,20 @@ extension.oregonstate.edu/catalog';
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_password_reset_body';
-  $strongarm->value = 'We received a request to reset the password for your [site:name] account. To reset your password, please click the following link or copy and paste it into your browser:
-[user:one-time-login-url]
+  $strongarm->value = '<p>We received a request to reset the password for your [site:name] account. To reset your password, please click the following link or copy and paste it into your browser:<br />
+<div>[user:one-time-login-url]</div>
 
-This link can only be used once. It expires after one day, and nothing will happen if it\'s not used.
+<p>This link can only be used once. It expires after one day, and nothing will happen if it\'s not used.</p>
 
-Please contact us if you have questions. Thank you.
+<p>Please contact us if you have questions. Thank you.</p>
 
-
-Extension and Experiment Station Communications
-Oregon State University
-422 Kerr Administration Bldg.
-Corvallis, OR 97331-2119
-Phone: 541-737-2513 or 800-561-6719
-Email: puborders@oregonstate.edu
-extension.oregonstate.edu/catalog
+<br />
+<p><strong>Extension and Experiment Station Communications</strong><br />
+Oregon State University<br />
+422 Kerr Administration Bldg.<br />
+Corvallis, OR 97331-2119<br />
+Phone: 541-737-2513 or 800-561-6719<br />
+Email: puborders@oregonstate.edu</p>
 ';
   $export['user_mail_password_reset_body'] = $strongarm;
 
@@ -210,23 +208,22 @@ extension.oregonstate.edu/catalog
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_register_admin_created_body';
-  $strongarm->value = 'We created an [site:name] account for you. To confirm your email address and finish setting up your account, please click the following link or copy and paste it into your browser:
-[user:one-time-login-url]
+  $strongarm->value = '<p>We created an [site:name] account for you. To confirm your email address and finish setting up your account, please click the following link or copy and paste it into your browser:<br />
+[user:one-time-login-url]</p>
 
-This link can be used only once, and it will take you directly to a page where you can set your own password. After setting your password, you will be able to log in at [site:login-url] in the future using:
-e-mail address: [user:mail]
-password: The password you create
+<p>This link can be used only once, and it will take you directly to a page where you can set your own password. After setting your password, you will be able to sign in at [site:login-url] in the future using:</p>
+<div>e-mail address: [user:mail]</div>
+<div>password: The password you create</div>
 
-Please contact us if you have questions. Thank you!
+<p>Please contact us if you have questions. Thank you!</p>
 
-
-Extension and Experiment Station Communications
-Oregon State University
-422 Kerr Administration Bldg.
-Corvallis, OR 97331-2119
-Phone: 541-737-2513 or 800-561-6719
-Email: puborders@oregonstate.edu
-extension.oregonstate.edu/catalog';
+<br />
+<p><strong>Extension and Experiment Station Communications</strong><br />
+Oregon State University<br />
+422 Kerr Administration Bldg.<br />
+Corvallis, OR 97331-2119<br />
+Phone: 541-737-2513 or 800-561-6719<br />
+Email: puborders@oregonstate.edu</p>';
   $export['user_mail_register_admin_created_body'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -240,25 +237,24 @@ extension.oregonstate.edu/catalog';
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_register_no_approval_required_body';
-  $strongarm->value = 'Thank you for creating an [site:name] account. To confirm your email address and finish setting up your account, please click the following link or copy and paste it into your browser:
-[user:one-time-login-url]
+  $strongarm->value = '<p>Thank you for creating an [site:name] account. To confirm your email address and finish setting up your account, please click the following link or copy and paste it into your browser:<br />
+[user:one-time-login-url]</p>
 
-This link can be used only once, and it will take you directly to a page where you can set your own password. After setting your password, you will be able to log in at [site:login-url] in the future using:
-e-mail address: [user:mail]
-password: The password you create
+<p>This link can be used only once, and it will take you directly to a page where you can set your own password. After setting your password, you will be able to log in at [site:login-url] in the future using:<br />
+<div>e-mail address: [user:mail]<div />
+<div>password: The password you create<div /></p>
 
-If you requested an "OSU affiliate" or "Reseller" account type, we will verify your eligibility for the account type you selected and contact you if we have questions.
+<p>If you requested an "OSU affiliate" or "Reseller" account type, we will verify your eligibility for the account type you selected and contact you if we have questions.</p>
 
-Please contact us if you have questions. Thank you!
+<p>Please contact us if you have questions. Thank you!</p>
 
-
-Extension and Experiment Station Communications
-Oregon State University
-422 Kerr Administration Bldg.
-Corvallis, OR 97331-2119
-Phone: 541-737-2513 or 800-561-6719
-Email: puborders@oregonstate.edu
-extension.oregonstate.edu/catalog';
+<br />
+<p><strong>Extension and Experiment Station Communications</strong><br />
+Oregon State University<br />
+422 Kerr Administration Bldg.<br />
+Corvallis, OR 97331-2119<br />
+Phone: 541-737-2513 or 800-561-6719<br />
+Email: puborders@oregonstate.edu</p>';
   $export['user_mail_register_no_approval_required_body'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -333,18 +329,17 @@ password: Your password
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_status_blocked_body';
-  $strongarm->value = 'Your [site:name] account has been blocked.
+  $strongarm->value = '<p>Your [site:name] account has been blocked.</p>
 
-Please contact us if you have questions. Thank you.
+<p>Please contact us if you have questions. Thank you.</p>
 
-
-Extension and Experiment Station Communications
-Oregon State University
-422 Kerr Administration Bldg.
-Corvallis, OR 97331-2119
-Phone: 541-737-2513 or 800-561-6719
-Email: puborders@oregonstate.edu
-extension.oregonstate.edu/catalog';
+<br />
+<p><strong>Extension and Experiment Station Communications</strong><br />
+Oregon State University<br />
+422 Kerr Administration Bldg.<br />
+Corvallis, OR 97331-2119<br />
+Phone: 541-737-2513 or 800-561-6719<br />
+Email: puborders@oregonstate.edu</p>';
   $export['user_mail_status_blocked_body'] = $strongarm;
 
   $strongarm = new stdClass();
@@ -365,19 +360,17 @@ extension.oregonstate.edu/catalog';
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_status_canceled_body';
-  $strongarm->value = 'Your [site:name] account has been canceled.
+  $strongarm->value = '<p>Your [site:name] account has been canceled.</p>
 
-Please contact us if you have questions. Thank you.
+<p>Please contact us if you have questions. Thank you.</p>
 
-
-Extension and Experiment Station Communications
-Oregon State University
-422 Kerr Administration Bldg.
-Corvallis, OR 97331-2119
-Phone: 541-737-2513 or 800-561-6719
-Email: puborders@oregonstate.edu
-extension.oregonstate.edu/catalog
-';
+<br />
+<p><strong>Extension and Experiment Station Communications</strong><br />
+Oregon State University<br />
+422 Kerr Administration Bldg.<br />
+Corvallis, OR 97331-2119<br />
+Phone: 541-737-2513 or 800-561-6719<br />
+Email: puborders@oregonstate.edu</p>';
   $export['user_mail_status_canceled_body'] = $strongarm;
 
   $strongarm = new stdClass();

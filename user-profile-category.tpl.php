@@ -26,14 +26,12 @@
  //dpm($profile_items, '$profile_items array');
 ?>
 
-<?php
-  $attributes = ' class="user-profile-category user-information clearfix"';
 
- ?>
 <?php if ($title): ?>
   <h3><?php print $title; ?></h3>
 <?php endif; ?>
 
-<ul<?php print $attributes; ?>>
+<!-- <ul<?php print $attributes; ?>> -->
+  <ul class="user-information">
   <?php print $profile_items; ?>
 </ul>

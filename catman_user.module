@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Code for the Commerce Kickstart User feature.
+ * Code for the Catman User feature.
  */
 
 include_once 'catman_user.features.inc';
@@ -156,7 +156,7 @@ function catman_user_form_alter(&$form, &$form_state, $form_id) {
      $form['account']['mail']['#weight'] = '-10'; // make field appear at top of form
      $form['account']['mail']['#description'] = t('Enter a valid e-mail address. We will send all messages about your account (e.g., password reset emails) and your OSU Extension Catalog orders to this address. Your e-mail address will not be sold or made public.');
      $form['account']['current_pass']['#description'] = t('Enter your current password (required to change your e-mail address or password).<br>
-Forgot your password? <a href="/catalog/user/password" title="Request new password via e-mail.">Request new password</a>.');
+Forgot your password? <a href="/user/password" title="Request new password via e-mail.">Request new password</a>.');
      $form['account']['pass']['#description'] = t('Enter your new password in both fields.');
   }
 }
@@ -176,25 +176,9 @@ function catman_user_user_view($account, $view_mode, $langcode) {
 
 
   if (module_exists('commerce_addressbook')) {
-    $shipping_profile_id = $billing_profile_id = NULL;
-    if (commerce_addressbook_profile_page_access($account, 'shipping')) {
-      $shipping_profile_id = commerce_addressbook_get_default_profile_id($account->uid, 'shipping');
-      if ($shipping_profile_id) {
-        $shipping_profile = commerce_customer_profile_load($shipping_profile_id);
-        $shipping_profile_render = entity_view('commerce_customer_profile', array($shipping_profile), 'full');
-        $shipping_profile_render = reset($shipping_profile_render);
-        $shipping_profile_output = drupal_render($shipping_profile_render);
-      }
-      else {
-        $shipping_profile_output = '<p>' . t('No default shipping profile') . '</p>';
-      }
-      $account->content['information']['shipping_profile'] =  array(
-        '#type' => 'user_profile_item',
-        '#title' => t('Primary shipping address'),
-        '#markup' => $shipping_profile_output . l(t('Manage shipping address'), 'user/' . $account->uid . '/addressbook/shipping'),
-        '#attributes' => array('class' => array('shipping-address')),
-      );
-    }
+    // $shipping_profile_id = $billing_profile_id = NULL;
+    // $billing_profile_id = $billing_profile_id = NULL;
+
     if (commerce_addressbook_profile_page_access($account, 'billing')) {
       $billing_profile_id = commerce_addressbook_get_default_profile_id($account->uid, 'billing');
       if ($billing_profile_id) {
@@ -211,6 +195,25 @@ function catman_user_user_view($account, $view_mode, $langcode) {
         '#title' => t('Primary billing address'),
         '#markup' => $billing_profile_output  . l(t('Manage billing address'), 'user/' . $account->uid . '/addressbook/billing'),
         '#attributes' => array('class' => array('billing-address')),
+      );
+    }
+
+    if (commerce_addressbook_profile_page_access($account, 'shipping')) {
+      $shipping_profile_id = commerce_addressbook_get_default_profile_id($account->uid, 'shipping');
+      if ($shipping_profile_id) {
+        $shipping_profile = commerce_customer_profile_load($shipping_profile_id);
+        $shipping_profile_render = entity_view('commerce_customer_profile', array($shipping_profile), 'full');
+        $shipping_profile_render = reset($shipping_profile_render);
+        $shipping_profile_output = drupal_render($shipping_profile_render);
+      }
+      else {
+        $shipping_profile_output = '<p>' . t('No default shipping profile') . '</p>';
+      }
+      $account->content['information']['shipping_profile'] =  array(
+        '#type' => 'user_profile_item',
+        '#title' => t('Primary shipping address'),
+        '#markup' => $shipping_profile_output . l(t('Manage shipping address'), 'user/' . $account->uid . '/addressbook/shipping'),
+        '#attributes' => array('class' => array('shipping-address')),
       );
     }
   }
@@ -231,8 +234,8 @@ function catman_user_user_view($account, $view_mode, $langcode) {
 
   $account->content['recent_orders']['view'] = array(
     '#type' => 'user_profile_item',
-    '#title' => '',
-    '#markup' => views_embed_view('commerce_backoffice_user_orders', 'block_1', $account->uid),
+    // '#title' => 'Recent orders from my view',
+    '#markup' => views_embed_view('catman_user', 'orders_block', $account->uid),
     '#attributes' => array('class' => array('recent-orders')),
   );
 
@@ -259,7 +262,7 @@ function catman_user_user_view_alter(&$build) {
 /**
  * Implements hook_preprocess_user_profile_item().
  */
-function catman_user_preprocess_user_profile_item(&$variables) {
+function commerce_user_preprocess_user_profile_item(&$variables) {
   // Append custom css classes.
   if (!empty($variables['element']['#attributes']['class'])) {
     $variables['classes_array'] = array_merge($variables['classes_array'], $variables['element']['#attributes']['class']);
@@ -269,7 +272,7 @@ function catman_user_preprocess_user_profile_item(&$variables) {
 /**
  * Implements hook_preprocess_user_profile_category().
  */
-function catman_user_preprocess_user_profile_category(&$variables) {
+function commerce_user_preprocess_user_profile_category(&$variables) {
   // Append custom css classes.
   if (!empty($variables['element']['#attributes']['class'])) {
     $variables['classes_array'] = array_merge($variables['classes_array'], $variables['element']['#attributes']['class']);
