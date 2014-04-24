@@ -28,24 +28,6 @@ function catman_user_menu_default_menu_links() {
     'weight' => -49,
     'customized' => 0,
   );
-  // Exported menu link: menu-user-menu_log-out:user/logout
-  $menu_links['menu-user-menu_log-out:user/logout'] = array(
-    'menu_name' => 'menu-user-menu',
-    'link_path' => 'user/logout',
-    'router_path' => 'user/logout',
-    'link_title' => 'Log out',
-    'options' => array(
-      'attributes' => array(),
-      'identifier' => 'menu-user-menu_log-out:user/logout',
-    ),
-    'module' => 'menu',
-    'hidden' => 0,
-    'external' => 0,
-    'has_children' => 0,
-    'expanded' => 0,
-    'weight' => -47,
-    'customized' => 0,
-  );
   // Exported menu link: menu-user-menu_my-account:user
   $menu_links['menu-user-menu_my-account:user'] = array(
     'menu_name' => 'menu-user-menu',
@@ -68,7 +50,6 @@ function catman_user_menu_default_menu_links() {
   // Translatables
   // Included for use with string extractors like potx.
   t('Create account');
-  t('Log out');
   t('My account');
 
 

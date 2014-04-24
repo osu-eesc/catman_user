@@ -141,6 +141,12 @@ function catman_user_form_alter(&$form, &$form_state, $form_id) {
     $form['actions']['#suffix'] = '<div class="back-to-login clearfix">' . l(t('Back to sign in'), 'user/login', array('attributes' => array('class' => array('login-account'), 'title' => t('Sign in')))) . '</div>';
     $form['actions']['#suffix'] .= '</div>';
     $form['name']['#description'] = t('We\'ll send a password reset message to your e-mail address.');
+
+  }
+
+  if ($form_id == 'user_pass_reset') {
+   $form['actions']['submit']['#value'] = 'Sign in';
+   $form['message']['#markup'] = t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to sign in to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout)));
   }
 
   if ($form_id == 'user_register_form') {

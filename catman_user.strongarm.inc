@@ -237,12 +237,7 @@ Email: puborders@oregonstate.edu</p>';
   $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->api_version = 1;
   $strongarm->name = 'user_mail_register_no_approval_required_body';
-  $strongarm->value = '<p>Thank you for creating an [site:name] account. To confirm your email address and finish setting up your account, please click the following link or copy and paste it into your browser:<br />
-[user:one-time-login-url]</p>
-
-<p>This link can be used only once, and it will take you directly to a page where you can set your own password. After setting your password, you will be able to log in at [site:login-url] in the future using:<br />
-<div>e-mail address: [user:mail]<div />
-<div>password: The password you create<div /></p>
+  $strongarm->value = '<p>Thank you for creating an [site:name] account. You can see your account details, order status, and order history at any time by signing into your [site:name] account at: [site:login-url]</p>
 
 <p>If you requested an "OSU affiliate" or "Reseller" account type, we will verify your eligibility for the account type you selected and contact you if we have questions.</p>
 
