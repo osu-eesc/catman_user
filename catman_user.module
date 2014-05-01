@@ -97,18 +97,20 @@ function catman_user_module_implements_alter(&$implementations, $hook) {
  * Hide the Mime Mail settings on the user settings page.
  */
 function catman_user_form_user_profile_form_alter(&$form, &$form_state) {
-  if ($form['#user_category'] == 'account') {
-    $form['mimemail']['#access'] = FALSE;
 
-    // Display requested account type if (admin = 3, store manager = 7)
-    global $user;
-    if ($user->roles[3] || $user->roles[7]) {
-      $form['field_requested_account_type']['#access'] = TRUE;
-    }
-    else {
-       $form['field_requested_account_type']['#access'] = FALSE;
-    }
+  $form['mimemail']['#access'] = FALSE;
 
+  // Display requested account type if (admin = 3, store manager = 7)
+  global $user;
+  if ($user->roles[3] || $user->roles[7]) {
+    $form['field_requested_account_type']['#access'] = TRUE;
+  }
+  if ($user->roles[3] || $user->roles[4] || $user->roles[7]) {
+    $form['picture']['#access'] = TRUE;
+  }
+  else {
+    $form['field_requested_account_type']['#access'] = FALSE;
+      $form['picture']['#access'] = FALSE;
   }
 
 }

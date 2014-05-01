@@ -40,7 +40,6 @@ features[user_permission][] = view own commerce_customer_profile entities of bun
 features[user_permission][] = view own commerce_customer_profile entities of bundle shipping
 features[user_role][] = Customer
 features[user_role][] = OSU affiliate
-features[user_role][] = PNW
 features[user_role][] = Project manager
 features[user_role][] = Reseller
 features[user_role][] = Store manager

@@ -22,12 +22,6 @@ function catman_user_user_default_roles() {
     'weight' => 3,
   );
 
-  // Exported role: PNW.
-  $roles['PNW'] = array(
-    'name' => 'PNW',
-    'weight' => 5,
-  );
-
   // Exported role: Project manager.
   $roles['Project manager'] = array(
     'name' => 'Project manager',
