@@ -264,6 +264,9 @@ function catman_user_user_view_alter(&$build) {
   if (isset($build['field_requested_account_type'])) {
     unset($build['field_requested_account_type']);
   }
+  if (isset($build['user_picture'])) {
+    unset($build['user_picture']);
+  }
 }
 
 
