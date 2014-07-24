@@ -14,6 +14,9 @@ function catman_user_user_default_permissions() {
   $permissions['create commerce_customer_profile entities'] = array(
     'name' => 'create commerce_customer_profile entities',
     'roles' => array(
+      'Customer' => 'Customer',
+      'OSU affiliate' => 'OSU affiliate',
+      'Reseller' => 'Reseller',
       'authenticated user' => 'authenticated user',
     ),
     'module' => 'commerce_customer',
