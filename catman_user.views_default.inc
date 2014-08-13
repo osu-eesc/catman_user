@@ -13,7 +13,7 @@ function catman_user_views_default_views() {
   $view = new view();
   $view->name = 'catman_user';
   $view->description = 'Display a list of completed orders for a user (catman).';
-  $view->tag = 'commerce';
+  $view->tag = 'catman';
   $view->base_table = 'commerce_order';
   $view->human_name = 'Catman: User orders';
   $view->core = 7;
@@ -96,15 +96,6 @@ function catman_user_views_default_views() {
   $handler->display->display_options['relationships']['invoice_id']['id'] = 'invoice_id';
   $handler->display->display_options['relationships']['invoice_id']['table'] = 'commerce_order';
   $handler->display->display_options['relationships']['invoice_id']['field'] = 'invoice_id';
-  /* Field: Broken/missing handler */
-  $handler->display->display_options['fields']['invoice_id']['id'] = 'invoice_id';
-  $handler->display->display_options['fields']['invoice_id']['table'] = 'commerce_invoice';
-  $handler->display->display_options['fields']['invoice_id']['field'] = 'invoice_id';
-  $handler->display->display_options['fields']['invoice_id']['relationship'] = 'invoice_id';
-  $handler->display->display_options['fields']['invoice_id']['ui_name'] = 'token reference';
-  $handler->display->display_options['fields']['invoice_id']['label'] = '';
-  $handler->display->display_options['fields']['invoice_id']['exclude'] = TRUE;
-  $handler->display->display_options['fields']['invoice_id']['element_label_colon'] = FALSE;
   /* Field: Commerce Order: Created date */
   $handler->display->display_options['fields']['created']['id'] = 'created';
   $handler->display->display_options['fields']['created']['table'] = 'commerce_order';
