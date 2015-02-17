@@ -63,7 +63,7 @@ function catman_user_default_rules_configuration() {
       "ON" : { "user_insert" : [] },
       "DO" : [
         { "mail" : {
-            "to" : "jennifer.alexander@oregonstate.edu, bryan.mayjor@oregonstate.edu",
+            "to" : "bryan.mayjor@oregonstate.edu, puborders@oregonstate.edu",
             "subject" : "New [site:name] account created",
             "message" : "\\u003Cp\\u003EA new [site:name] account was created for [account:mail]\\u003C\\/p\\u003E\\r\\n\\u003Cp\\u003ERequested account type: \\u003Cstrong\\u003E[account:field-requested-account-type]\\u003C\\/strong\\u003E\\u003C\\/p\\u003E\\r\\n\\r\\n\\u003Cp\\u003EPlease sign in to CatMan and confirm that the user is eligible for the account type selected.\\u003Cbr \\/\\u003E\\r\\n[account:url]\\u003C\\/p\\u003E\\r\\n",
             "language" : [ "" ]

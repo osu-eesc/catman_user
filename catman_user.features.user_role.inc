@@ -25,7 +25,7 @@ function catman_user_user_default_roles() {
   // Exported role: Project manager.
   $roles['Project manager'] = array(
     'name' => 'Project manager',
-    'weight' => 7,
+    'weight' => 5,
   );
 
   // Exported role: Reseller.
