@@ -147,8 +147,10 @@ function catman_user_form_alter(&$form, &$form_state, $form_id) {
   }
 
   if ($form_id == 'user_pass_reset') {
+   $timeout = variable_get('user_password_reset_timeout', 86400);
+   $current = REQUEST_TIME;
    $form['actions']['submit']['#value'] = 'Sign in';
-   $form['message']['#markup'] = t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to sign in to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($timestamp + $timeout)));
+   $form['message']['#markup'] = t('<p>This is a one-time login for %user_name and will expire on %expiration_date.</p><p>Click on this button to sign in to the site and change your password.</p>', array('%user_name' => $account->name, '%expiration_date' => format_date($current + $timeout)));
   }
 
   if ($form_id == 'user_register_form') {
